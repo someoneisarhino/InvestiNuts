@@ -107,6 +107,8 @@ def login():
         session['lesson_1_1_q2_answered'] = False
         session['lesson_1_1_q1_answered'] = False
         session['lesson_1_1_q2_answered'] = False
+        session['purchased_items'] = []
+        session['equipped_item'] = None
         # Add keys for other questions/modules later as needed
         print(f"Login successful for: {email}. Initialized session progress.")
         return jsonify({"success": True})
@@ -152,6 +154,8 @@ def signup():
             session['lesson_2_1_q3_answered'] = False
             session['lesson_1_1_q1_answered'] = False
             session['lesson_1_1_q2_answered'] = False
+            session['purchased_items'] = []
+            session['equipped_item'] = None
             # Add keys for other questions/modules later as needed
             print(f"Signup successful for: {email}. Initialized session progress.")
             return jsonify({"success": True})
@@ -188,6 +192,8 @@ def reset_progress():
         session['lesson_2_1_q3_answered'] = False
         session['lesson_1_1_q1_answered'] = False
         session['lesson_1_1_q2_answered'] = False
+        session['purchased_items'] = []
+        session['equipped_item'] = None
         # Reset other progress markers here if added later
         print(f"Reset progress for user: {session['email']}")
     # Redirect back to the page the user was on, or home as a fallback
@@ -236,6 +242,79 @@ def learn_module3():
 def glossary():
     """Renders the glossary page."""
     return render_template('glossary.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+# --- Shop Routes ---
+SHOP_ITEMS = {
+    "rainbowhat": {"name": "Rainbow Hat", "price": 15, "image": "rainbowhat.png", "full_image": "nuttyrainbowhat.jpg"},
+    "bowtie": {"name": "Bowtie", "price": 10, "image": "bowtie.png", "full_image": "nuttybowtie.jpg"}, # Assuming nuttybowtie.jpg exists
+    "brownhat": {"name": "Brown Hat", "price": 10, "image": "brownhat.png", "full_image": "nuttybrownhat.jpg"}, # Assuming nuttybrownhat.jpg exists
+    "camobowtie": {"name": "Camo Bowtie", "price": 10, "image": "camobowtie.png", "full_image": "nuttycamobowtie.jpg"},
+    "greenpolkadot": {"name": "Green Polkadot Tie", "price": 10, "image": "greenpolkadottie.png", "full_image": "nuttygreenpolkadot.jpg"}, # Assuming nuttygreenpolkadot.jpg exists
+    "pinkhat": {"name": "Pink Hat", "price": 10, "image": "pinkhat.png", "full_image": "nuttypinkhat.jpg"}, # Assuming nuttypinkhat.jpg exists
+    "purpletie": {"name": "Purple Tie", "price": 10, "image": "purpletie.png", "full_image": "nuttypurpletie.jpg"}, # Assuming nuttypurpletie.jpg exists
+    "redorangetie": {"name": "Red/Orange Tie", "price": 10, "image": "redorangetie.png", "full_image": "nuttyredorangetie.jpg"}, # Assuming nuttyredorangetie.jpg exists
+    "sprout": {"name": "Sprout", "price": 5, "image": "sprout.png", "full_image": "nuttysprout.jpg"},
+    "whitebluetie": {"name": "White/Blue Tie", "price": 10, "image": "whitebluetie.png", "full_image": "nuttywhitebluetie.jpg"}, # Assuming nuttywhitebluetie.jpg exists
+    "yellowflower": {"name": "Yellow Flower", "price": 5, "image": "yellowflower.png", "full_image": "nuttyyellowflower.jpg"}, # Assuming nuttyyellowflower.jpg exists
+}
+
+@app.route('/shop')
+def shop():
+    """Renders the main shop page."""
+    # Pass item details (like image filenames) to the template
+    # Also pass purchase status for greying out/disabling links
+    purchased_items = session.get('purchased_items', [])
+    items_for_template = {id: {'image': data['image'], 'purchased': id in purchased_items} for id, data in SHOP_ITEMS.items()}
+    return render_template('shop.html', user_email=session.get('email'), nuts=session.get('nuts', 0), items=items_for_template)
+
+@app.route('/shop/item/<item_id>')
+def shop_item(item_id):
+    """Renders the purchase confirmation page for a specific item."""
+    item = SHOP_ITEMS.get(item_id)
+    if not item:
+        flash("Item not found!", "error")
+        return redirect(url_for('shop'))
+
+    purchased = item_id in session.get('purchased_items', [])
+    return render_template('shop_item.html', user_email=session.get('email'), nuts=session.get('nuts', 0), item_id=item_id, item=item, purchased=purchased)
+
+@app.route('/shop/purchase/<item_id>', methods=['POST'])
+def purchase_item(item_id):
+    """Handles the purchase logic for an item."""
+    if 'email' not in session:
+        return redirect(url_for('index'))
+
+    item = SHOP_ITEMS.get(item_id)
+    if not item:
+        flash("Item not found!", "error")
+        return redirect(url_for('shop'))
+
+    purchased_items = session.get('purchased_items', [])
+    if item_id in purchased_items:
+        flash("You already own this item!", "info")
+        return redirect(url_for('shop'))
+
+    current_nuts = session.get('nuts', 0)
+    item_price = item['price']
+
+    if current_nuts >= item_price:
+        # Deduct nuts
+        session['nuts'] = current_nuts - item_price
+        # Add item to purchased list
+        purchased_items.append(item_id)
+        session['purchased_items'] = purchased_items
+        # Set this as the equipped item
+        # session['equipped_item'] = item_id # Removed: Nutty image should not change
+        session.modified = True
+        flash(f"Successfully purchased {item['name']}!", "success")
+        print(f"User {session['email']} purchased {item_id}. Nuts remaining: {session['nuts']}")
+        return redirect(url_for('shop'))
+    else:
+        flash("Not enough Nuts to purchase this item!", "error")
+        print(f"User {session['email']} failed purchase of {item_id}. Has {current_nuts}, needs {item_price}.")
+        return redirect(url_for('shop_item', item_id=item_id))
+
+# --- End Shop Routes ---
+
 
 
 @app.route('/learn/module3/lesson1/page1')

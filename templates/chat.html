@@ -234,7 +234,7 @@
             <div id="profile-dropdown" class="profile-dropdown">
                 <p>{{ user_email }}</p>
                 <!-- Shop Button -->
-                <button class="shop-button" disabled>SHOP: {{ nuts }} Nuts</button> <!-- Disabled for now -->
+                <a href="{{ url_for('shop') }}" class="shop-button">SHOP: {{ nuts }} Nuts</a> <!-- Enabled and linked -->
                 <!-- Reset Button -->
                 <a href="{{ url_for('reset_progress') }}" class="reset-button" onclick="return confirm('Are you sure you want to reset all progress and Nuts? This cannot be undone.');">RESET</a>
                 <!-- Logout Button -->
