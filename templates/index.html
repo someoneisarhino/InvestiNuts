@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestiNuts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Basic styling for centering and layout */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: white; /* Set background to white */
+            position: relative; /* Needed for absolute/fixed positioning of children/pseudo-elements */
+            padding-bottom: 120px; /* Add padding to prevent content overlap with the image */
+        }
+
+        body::after {
+            content: '';
+            background-image: url('{{ url_for('static', filename='nuttyfull.jpg') }}');
+            background-repeat: no-repeat;
+            background-size: contain; /* Adjust as needed */
+            position: fixed;
+            bottom: 10px; /* Adjust spacing from bottom */
+            left: 10px;  /* Adjust spacing from left */
+            width: 250px; /* Increased size */
+            height: 250px; /* Increased size */
+            z-index: -1; /* Place it behind the content */
+        }
+        .menu-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            width: 90%;
+            max-width: 400px; /* Max width for the container */
+        }
+        .form-elements {
+            margin-top: 1.5rem;
+        }
+        .form-elements input {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            border-radius: 0.375rem;
+        }
+        .button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .button-primary {
+            background-color: #2563eb; /* Tailwind blue-600 */
+            color: white;
+            border: none;
+        }
+        .button-primary:hover {
+            background-color: #1d4ed8; /* Tailwind blue-700 */
+        }
+        .button-secondary {
+            background-color: #4b5563; /* Tailwind gray-600 */
+            color: white;
+            border: none;
+            margin-left: 0.5rem; /* Space between buttons */
+        }
+        .button-secondary:hover {
+            background-color: #374151; /* Tailwind gray-700 */
+        }
+        .hidden {
+            display: none;
+        }
+        #image-placeholder {
+             width: 100px; /* Adjust size as needed */
+             height: 100px;
+             background-color: #e5e7eb; /* Tailwind gray-200 */
+             border-radius: 50%; /* Make it circular */
+             margin: 1rem auto; /* Center horizontally */
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             font-size: 0.8rem;
+             color: #6b7280; /* Tailwind gray-500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">InvestiNuts</h1>
+
+        <!-- Placeholder for Squirrel Image -->
+        <img src="{{ url_for('static', filename='nutty.png') }}" alt="InvestiNuts Logo" class="w-24 h-24 mx-auto mb-4 rounded-full"> <!-- Replaced placeholder with image -->
+
+        <!-- Initially visible buttons -->
+        <div id="initial-buttons" class="mt-6">
+            <button id="login-btn" class="button button-primary">Log In</button>
+            <button id="signup-btn" class="button button-secondary">Sign Up</button>
+        </div>
+
+        <!-- Hidden form elements -->
+        <div id="auth-form" class="form-elements hidden">
+             <p id="form-title" class="text-xl font-semibold mb-4"></p> <!-- Title for Login/Signup form -->
+             <div id="message-area" class="text-red-500 text-sm mb-2 h-4"></div> <!-- For error messages -->
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div class="flex justify-between mt-4"> <!-- Flex container -->
+                <button id="enter-btn" class="button button-primary flex-grow mr-1">ENTER</button> <!-- Removed w-full, added flex-grow and margin -->
+                <button id="back-btn" class="button button-secondary flex-grow ml-1">Back</button> <!-- Removed w-full, mt-2, added flex-grow and margin -->
+            </div>
+        </div>
+    </div>
+
+    <!-- We will create auth.js next -->
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>
