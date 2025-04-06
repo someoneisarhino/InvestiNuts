@@ -118,30 +118,30 @@
 
     <!-- Main Content Area -->
     <div class="lesson-content-box">
-        <h2>Question 1</h2>
-        <form action="{{ url_for('submit_lesson_2_1_q1') }}" method="POST" id="q1-form">
-            <p class="question-text">What is the primary goal of investing?</p>
+        <h2>Question 2</h2>
+        <form action="{{ url_for('submit_lesson_2_1_q2') }}" method="POST" id="q2-form">
+            <p class="question-text">Which of the following is an example of an asset you can invest in?</p>
             <div class="options-container">
                 <label>
-                    <input type="radio" name="answer" value="a" required {% if q1_answered %}disabled{% endif %}>
-                    a. Growth
+                    <input type="radio" name="answer" value="a" required {% if q2_answered %}disabled{% endif %}>
+                    a. Loan
                 </label>
                 <label>
-                    <input type="radio" name="answer" value="b" {% if q1_answered %}disabled{% endif %}>
-                    b. Risk
+                    <input type="radio" name="answer" value="b" {% if q2_answered %}disabled{% endif %}>
+                    b. Debt
                 </label>
                 <label>
-                    <input type="radio" name="answer" value="c" {% if q1_answered %}disabled{% endif %}>
-                    c. Expense
+                    <input type="radio" name="answer" value="c" {% if q2_answered %}disabled{% endif %}>
+                    c. Stocks
                 </label>
                  <label>
-                    <input type="radio" name="answer" value="d" {% if q1_answered %}disabled{% endif %}>
-                    d. Loss
+                    <input type="radio" name="answer" value="d" {% if q2_answered %}disabled{% endif %}>
+                    d. Liability
                 </label>
             </div>
-            {% if q1_answered %}
+            {% if q2_answered %}
                 <p class="already-answered-message">You have already answered this question.</p>
-                <a href="{{ url_for('lesson_2_1_practice_q2') }}" class="next-button">Next Question</a> <!-- Allow moving on -->
+                <a href="{{ url_for('lesson_2_1_practice_q3') }}" class="next-button">Next Question</a> <!-- Link to Q3 -->
             {% else %}
                 <button type="submit" class="submit-button">Submit Answer</button>
             {% endif %}
@@ -167,6 +167,15 @@
                     profileDropdown.style.display = 'none';
                 }
             });
+
+            // Display flashed messages as alerts
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        alert("{{ message }}"); // Simple alert popup
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         }
     </script>
 </body>
