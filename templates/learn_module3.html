@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvestiNuts - Learn</title>
+    <title>Module 3: Credit, Debt, and Loans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -53,20 +53,20 @@
             margin: 2rem auto; /* Center container with top/bottom margin */
             padding: 0 1rem; /* Add some padding on smaller screens */
         }
-        .module-item {
+        .module-item { /* Reusing class name for consistency */
             background-color: white;
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             margin-bottom: 1rem;
             overflow: hidden; /* Ensure border radius applies to children */
         }
-        .module-header {
+        .module-header { /* Reusing class name for consistency */
             display: flex;
             align-items: center;
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb; /* Separator line */
         }
-        .module-button {
+        .module-button { /* Reusing class name for consistency */
             flex-grow: 1; /* Take available space */
             text-align: left;
             font-weight: 600;
@@ -75,12 +75,10 @@
             padding: 0.5rem 0; /* Add some vertical padding */
             background: none;
             border: none;
-            cursor: pointer;
+            cursor: pointer; /* Make it look clickable even though it's not a link */
             font-size: 1rem; /* Adjust as needed */
         }
-        .module-button:hover {
-            color: #2563eb; /* blue-600 */
-        }
+        /* No hover effect needed for non-link buttons */
         .toggle-arrow {
             background: none;
             border: none;
@@ -92,7 +90,7 @@
         .toggle-arrow:hover {
             color: #1f2937; /* gray-800 */
         }
-        .module-summary {
+        .module-summary { /* Reusing class name for consistency */
             display: none; /* Hidden by default */
             padding: 1rem;
             background-color: #f9fafb; /* gray-50 */
@@ -104,15 +102,14 @@
             display: block;
         }
 
-       /* Profile Dropdown Styles (Modified for Flex Header) */
+       /* Profile Dropdown Styles (Copied from learn.html) */
        .profile-container {
-           /* Removed absolute positioning - now part of flex layout */
-           position: relative; /* Needed for dropdown positioning */
+           position: relative;
            margin-left: auto; /* Push profile to the right */
            z-index: 20;
        }
        .profile-icon {
-           width: 32px; /* Slightly smaller for header */
+           width: 32px;
            height: 32px;
            background-color: #9ca3af; /* Tailwind gray-400 */
            border-radius: 50%;
@@ -122,7 +119,7 @@
            align-items: center;
            color: white;
            font-weight: bold;
-           font-size: 0.9rem; /* Smaller font */
+           font-size: 0.9rem;
            border: 1px solid white;
        }
        .profile-dropdown {
@@ -195,13 +192,13 @@
            object-fit: contain; /* Ensure image scales nicely */
            display: block; /* Remove extra space below image */
        }
-   </style>
+    </style>
 </head>
 <body>
     <div class="header">
         <a href="{{ url_for('home') }}" class="home-button">Home</a>
         <button onclick="history.back()" class="home-button ml-2">Back</button> <!-- Added Back button -->
-        <span class="page-title flex-grow text-center">Learn</span> <!-- Added flex-grow and text-center -->
+        <span class="page-title flex-grow text-center">Module 3: Credit, Debt, and Loans</span> <!-- Added flex-grow and text-center -->
         <!-- Profile Icon and Dropdown -->
         {% if user_email %}
         <div class="profile-container">
@@ -222,57 +219,84 @@
     </div>
 
     <div class="learn-container">
-        <!-- Module 1 -->
+        <!-- Lesson 3.1 -->
         <div class="module-item">
             <div class="module-header">
-                <a href="{{ url_for('learn_module1') }}" class="module-button">Module 1: Personal Finances</a>
-                <button class="toggle-arrow" data-target="summary-1">
+                <a href="{{ url_for('lesson_3_1_page1') }}" class="module-button">Lesson 3.1: Understanding Credit Scores</a>
+                <button class="toggle-arrow" data-target="summary-3-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-            <div id="summary-1" class="module-summary">
-                (Budgeting, Saving, and Retirement). Understand the basics of personal finances, saving for retirement, and the importance of 401(k) and other retirement accounts!
+            <div id="summary-3-1" class="module-summary">
+                Learn what a credit score is, and why it matters.
             </div>
         </div>
 
-        <!-- Module 2 -->
+        <!-- Lesson 3.2 -->
         <div class="module-item">
             <div class="module-header">
-                <!-- Link Module 2 button -->
-                <a href="{{ url_for('learn_module2') }}" class="module-button">Module 2: Introduction to Investing</a>
-                <button class="toggle-arrow" data-target="summary-2">
+                <button class="module-button">Lesson 3.2: Building and Maintaining Good Credit</button>
+                <button class="toggle-arrow" data-target="summary-3-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-            <div id="summary-2" class="module-summary">
-                Understand how to create and manage a personalized investment profile based on goals, risk tolerance, and timelines!
+            <div id="summary-3-2" class="module-summary">
+                Learn good habits to maintain your credit score.
             </div>
         </div>
 
-        <!-- Module 3 -->
+        <!-- Lesson 3.3 -->
         <div class="module-item">
             <div class="module-header">
-                <!-- Link Module 3 button -->
-                <a href="{{ url_for('learn_module3') }}" class="module-button">Module 3: Credit, Debt, and Loans</a>
-                <button class="toggle-arrow" data-target="summary-3">
+                <button class="module-button">Lesson 3.3: Managing Debt Wisely</button>
+                <button class="toggle-arrow" data-target="summary-3-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-            <div id="summary-3" class="module-summary">
-                Understanding how credit works, how to build credit, and how to manage or eliminate debt responsibly.
+            <div id="summary-3-3" class="module-summary">
+                Learn how to build a payment plan and how to minimize debt.
+            </div>
+        </div>
+
+        <!-- Lesson 3.4 -->
+        <div class="module-item">
+            <div class="module-header">
+                <button class="module-button">Lesson 3.4: Understanding Loans</button>
+                <button class="toggle-arrow" data-target="summary-3-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            <div id="summary-3-4" class="module-summary">
+                Learn about the different kinds of loans (student, auto, personal, etc).
+            </div>
+        </div>
+
+        <!-- Lesson 3.5 -->
+        <div class="module-item">
+            <div class="module-header">
+                <button class="module-button">Lesson 3.5: How to Use Credit Responsibly</button>
+                <button class="toggle-arrow" data-target="summary-3-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            <div id="summary-3-5" class="module-summary">
+                Learn how to use credit to your advantage.
             </div>
         </div>
     </div>
 
-    <!-- Add specific JS for this page if needed later -->
     <script>
-        // Profile dropdown toggle
+        // Profile dropdown toggle (Copied from learn.html)
         const profileIcon = document.getElementById('profile-icon');
         const profileDropdown = document.getElementById('profile-dropdown');
 
@@ -288,9 +312,18 @@
                     profileDropdown.style.display = 'none';
                 }
             });
+    
+            // Display flashed messages as alerts
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        alert("{{ message }}"); // Simple alert popup
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         }
 
-        // Module summary toggle
+        // Module summary toggle (Copied from learn.html)
         const toggleButtons = document.querySelectorAll('.toggle-arrow');
         toggleButtons.forEach(button => {
             button.addEventListener('click', () => {

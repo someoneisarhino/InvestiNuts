@@ -17,18 +17,7 @@
             padding-bottom: 120px; /* Add padding to prevent content overlap with the image */
         }
 
-        body::after {
-            content: '';
-            background-image: url('{{ url_for('static', filename='nuttyfull.jpg') }}');
-            background-repeat: no-repeat;
-            background-size: contain; /* Adjust as needed */
-            position: fixed;
-            bottom: 10px; /* Adjust spacing from bottom */
-            left: 10px;  /* Adjust spacing from left */
-            width: 250px; /* Increased size */
-            height: 250px; /* Increased size */
-            z-index: -1; /* Place it behind the content */
-        }
+        /* Removed body::after rule */
         .content-container {
             background-color: white;
             padding: 3rem; /* More padding */
@@ -119,6 +108,40 @@
         .logout-button:hover {
             background-color: #f3f4f6; /* gray-100 */
         }
+        .shop-button { /* Style for the Shop button */
+            display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem;
+            color: #1d4ed8; /* blue-700 */ background-color: #eff6ff; /* blue-50 */
+            border: none; text-align: left; cursor: pointer; border-radius: 0.25rem;
+            margin-bottom: 0.25rem; /* Space below shop button */
+        }
+        .shop-button:hover { background-color: #dbeafe; /* blue-100 */ }
+        .reset-button { /* Style for the Reset button */
+            display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem;
+            color: #991b1b; /* red-800 */ background-color: #fee2e2; /* red-100 */
+            border: none; text-align: left; cursor: pointer; border-radius: 0.25rem;
+            margin-top: 0.25rem; /* Space above reset button */
+        }
+        .reset-button:hover { background-color: #fecaca; /* red-200 */ }
+        /* Styles for clickable nutty image */
+        .clickable-nutty {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 250px; /* Adjust size as needed */
+            height: 250px; /* Adjust size as needed */
+            z-index: 5; /* Ensure it's above background but potentially below modals/dropdowns if needed */
+            display: block; /* Make the link a block element */
+            transition: transform 0.2s ease-in-out; /* Optional: Add hover effect */
+        }
+        .clickable-nutty:hover {
+            transform: scale(1.05); /* Optional: Slight zoom on hover */
+        }
+        .clickable-nutty img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure image scales nicely */
+            display: block; /* Remove extra space below image */
+        }
     </style>
 </head>
 <body>
@@ -130,6 +153,11 @@
         </div>
         <div id="profile-dropdown" class="profile-dropdown">
             <p>{{ user_email }}</p>
+            <!-- Shop Button -->
+            <button class="shop-button" disabled>SHOP: {{ nuts }} Nuts</button> <!-- Disabled for now -->
+            <!-- Reset Button -->
+            <a href="{{ url_for('reset_progress') }}" class="reset-button" onclick="return confirm('Are you sure you want to reset all progress and Nuts? This cannot be undone.');">RESET</a>
+            <!-- Logout Button -->
             <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
         </div>
     </div>
@@ -163,6 +191,12 @@
                 }
             });
         }
+    </script>
+
+    <!-- Clickable Nutty Image -->
+    <a href="{{ url_for('chat_page') }}" class="clickable-nutty">
+        <img src="{{ url_for('static', filename='nuttyfull.jpg') }}" alt="Chat with Nutty">
+    </a>
     </script>
 </body>
 </html>

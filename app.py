@@ -3,7 +3,7 @@ import base64
 import io
 import google.generativeai as genai
 import json
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session # Added session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash # Added session and flash
 from dotenv import load_dotenv
 from PIL import Image # Import Pillow
 # import re
@@ -95,7 +95,13 @@ def login():
 
     if check_login(email, password):
         session['email'] = email # Store email in session
-        print(f"Login successful for: {email}")
+        # Initialize user progress in session
+        session['nuts'] = session.get('nuts', 0) # Keep existing nuts if already logged in? Or reset? Let's reset for simplicity on new login.
+        session['nuts'] = 0
+        session['lesson_3_1_q1_answered'] = False
+        session['lesson_3_1_q2_answered'] = False
+        # Add keys for other questions/modules later as needed
+        print(f"Login successful for: {email}. Initialized session progress.")
         return jsonify({"success": True})
     else:
         print(f"Login failed for: {email}")
@@ -130,7 +136,12 @@ def signup():
     else:
         if write_login(email, password):
             session['email'] = email # Store email in session after successful signup
-            print(f"Signup successful for: {email}")
+            # Initialize user progress in session
+            session['nuts'] = 0
+            session['lesson_3_1_q1_answered'] = False
+            session['lesson_3_1_q2_answered'] = False
+            # Add keys for other questions/modules later as needed
+            print(f"Signup successful for: {email}. Initialized session progress.")
             return jsonify({"success": True})
         else:
             print(f"Signup failed for {email}: Could not write to file.")
@@ -152,6 +163,20 @@ def logout():
     print(f"Logging out user: {session.get('email')}")
     session.pop('email', None)
     return redirect(url_for('index'))
+
+@app.route('/reset_progress')
+def reset_progress():
+    """Resets user's Nuts and question progress in the session."""
+    if 'email' in session:
+        session['nuts'] = 0
+        session['lesson_3_1_q1_answered'] = False
+        session['lesson_3_1_q2_answered'] = False
+        # Reset other progress markers here if added later
+        print(f"Reset progress for user: {session['email']}")
+    # Redirect back to the page the user was on, or home as a fallback
+    referrer = request.referrer or url_for('home')
+    return redirect(referrer)
+
 # --- End Route Protection & Logout ---
 
 
@@ -161,32 +186,113 @@ def home():
     """Renders the page with LEARN and CHAT buttons."""
     # require_login decorator handles authentication check
     # require_login decorator handles authentication check
-    return render_template('home.html', user_email=session.get('email'))
+    return render_template('home.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
 
 @app.route('/learn')
 def learn():
     """Renders the blank learning page."""
     # require_login decorator handles authentication check
-    return render_template('learn.html', user_email=session.get('email'))
+    return render_template('learn.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
 
 @app.route('/chat_page')
 def chat_page():
     """Renders the chat interface page."""
     # require_login decorator handles authentication check
-    return render_template('chat.html', user_email=session.get('email'))
+    return render_template('chat.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
 @app.route('/learn/module1')
 def learn_module1():
     """Renders the page for Learning Module 1."""
     # require_login decorator handles authentication check implicitly via before_request
-    return render_template('learn_module1.html', user_email=session.get('email'))
+    return render_template('learn_module1.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
 @app.route('/learn/module2')
 def learn_module2():
     """Renders the page for Learning Module 2."""
     # require_login decorator handles authentication check implicitly via before_request
-    return render_template('learn_module2.html', user_email=session.get('email'))
+    return render_template('learn_module2.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module3')
+def learn_module3():
+    """Renders the page for Learning Module 3."""
+    # require_login decorator handles authentication check implicitly via before_request
+    return render_template('learn_module3.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module3/lesson1/page1')
+def lesson_3_1_page1():
+    """Renders the first page of Lesson 3.1."""
+    return render_template('lesson_3_1_page1.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module3/lesson1/page2')
+def lesson_3_1_page2():
+    """Renders the second page of Lesson 3.1."""
+    return render_template('lesson_3_1_page2.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module3/lesson1/practice')
+def lesson_3_1_practice():
+    """Renders the practice page for Lesson 3.1."""
+    # Pass question answered status to the template
+    q1_answered = session.get('lesson_3_1_q1_answered', False)
+    return render_template('lesson_3_1_practice.html', user_email=session.get('email'), nuts=session.get('nuts', 0), q1_answered=q1_answered)
+
+@app.route('/learn/module3/lesson1/practice/q2')
+def lesson_3_1_practice_q2():
+    """Renders the second practice question page for Lesson 3.1."""
+    q2_answered = session.get('lesson_3_1_q2_answered', False)
+    return render_template('lesson_3_1_practice_q2.html', user_email=session.get('email'), nuts=session.get('nuts', 0), q2_answered=q2_answered)
 
 
 # --- End Application Page Routes ---
+
+# --- Answer Submission Routes ---
+@app.route('/submit_answer/lesson3_1_q1', methods=['POST'])
+def submit_lesson_3_1_q1():
+    """Handles submission for Lesson 3.1, Question 1."""
+    if 'email' not in session:
+        return redirect(url_for('index')) # Redirect if not logged in
+
+    if not session.get('lesson_3_1_q1_answered', False):
+        answer = request.form.get('answer')
+        correct_answer = 'b'
+        if answer == correct_answer:
+            session['nuts'] = session.get('nuts', 0) + 10
+            flash("You're nutting short of brilliant!", 'success') # Correct answer flash
+            print(f"User {session['email']} answered Q1 correctly. Nuts: {session['nuts']}")
+        else:
+            flash("you pe-can do better!", 'error') # Incorrect answer flash
+            print(f"User {session['email']} answered Q1 incorrectly.")
+        session['lesson_3_1_q1_answered'] = True
+        session.modified = True # Mark session as modified
+    else:
+        print(f"User {session['email']} tried to re-answer Q1.")
+
+    # Redirect to the next question page
+    return redirect(url_for('lesson_3_1_practice_q2'))
+
+@app.route('/submit_answer/lesson3_1_q2', methods=['POST'])
+def submit_lesson_3_1_q2():
+    """Handles submission for Lesson 3.1, Question 2."""
+    if 'email' not in session:
+        return redirect(url_for('index')) # Redirect if not logged in
+
+    if not session.get('lesson_3_1_q2_answered', False):
+        answer = request.form.get('answer')
+        correct_answer = 'c'
+        if answer == correct_answer:
+            session['nuts'] = session.get('nuts', 0) + 10
+            flash("You're nutting short of brilliant!", 'success') # Correct answer flash
+            print(f"User {session['email']} answered Q2 correctly. Nuts: {session['nuts']}")
+        else:
+            flash("you pe-can do better!", 'error') # Incorrect answer flash
+            print(f"User {session['email']} answered Q2 incorrectly.")
+        session['lesson_3_1_q2_answered'] = True
+        session.modified = True # Mark session as modified
+    else:
+        print(f"User {session['email']} tried to re-answer Q2.")
+
+    # Redirect back to Module 3 overview after the last question
+    # Or redirect to a "Lesson Complete" page in the future
+    return redirect(url_for('learn_module3'))
+
+# --- End Answer Submission Routes ---
 
 
 @app.route('/chat', methods=['POST'])
