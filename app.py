@@ -252,15 +252,17 @@ def submit_lesson_3_1_q1():
     if not session.get('lesson_3_1_q1_answered', False):
         answer = request.form.get('answer')
         correct_answer = 'b'
-        if answer == correct_answer:
+    
+        session['lesson_3_1_q1_answered'] = True
+        session['lesson_3_1_q1_correct'] = (answer == correct_answer)
+
+        if session['lesson_3_1_q1_correct']:
             session['nuts'] = session.get('nuts', 0) + 10
-            flash("You're nutting short of brilliant!", 'success') # Correct answer flash
             print(f"User {session['email']} answered Q1 correctly. Nuts: {session['nuts']}")
         else:
-            flash("you pe-can do better!", 'error') # Incorrect answer flash
             print(f"User {session['email']} answered Q1 incorrectly.")
-        session['lesson_3_1_q1_answered'] = True
-        session.modified = True # Mark session as modified
+
+        session.modified = True  # Make sure session updates
     else:
         print(f"User {session['email']} tried to re-answer Q1.")
 
@@ -276,15 +278,17 @@ def submit_lesson_3_1_q2():
     if not session.get('lesson_3_1_q2_answered', False):
         answer = request.form.get('answer')
         correct_answer = 'c'
-        if answer == correct_answer:
+    
+        session['lesson_3_1_q2_answered'] = True
+        session['lesson_3_1_q2_correct'] = (answer == correct_answer)
+
+        if session['lesson_3_1_q2_correct']:
             session['nuts'] = session.get('nuts', 0) + 10
-            flash("You're nutting short of brilliant!", 'success') # Correct answer flash
             print(f"User {session['email']} answered Q2 correctly. Nuts: {session['nuts']}")
         else:
-            flash("you pe-can do better!", 'error') # Incorrect answer flash
             print(f"User {session['email']} answered Q2 incorrectly.")
-        session['lesson_3_1_q2_answered'] = True
-        session.modified = True # Mark session as modified
+
+        session.modified = True
     else:
         print(f"User {session['email']} tried to re-answer Q2.")
 
