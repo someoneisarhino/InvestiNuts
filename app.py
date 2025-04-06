@@ -239,6 +239,22 @@ def lesson_3_1_practice_q2():
     q2_answered = session.get('lesson_3_1_q2_answered', False)
     return render_template('lesson_3_1_practice_q2.html', user_email=session.get('email'), nuts=session.get('nuts', 0), q2_answered=q2_answered)
 
+@app.route('/learn/module2/lesson1/page1')
+def lesson_2_1_page1():
+    """Renders the first page of Lesson 2.1."""
+    return render_template('lesson_2_1_page1.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module2/lesson1/page2')
+def lesson_2_1_page2():
+    """Renders the second page of Lesson 2.1."""
+    return render_template('lesson_2_1_page2.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module2/lesson1/practice')
+def lesson_2_1_practice():
+    """Renders the practice page for Lesson 2.1."""
+    # Add logic later to track answered status if needed
+    return render_template('lesson_2_1_practice.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
 
 # --- End Application Page Routes ---
 
