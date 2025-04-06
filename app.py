@@ -552,7 +552,9 @@ def chat(): # Renamed back to chat
             context_message += "Now, answer the following question:\n"
 
         # Combine context (if any) with the user's actual message
-        full_user_message = context_message + user_message
+        # Prepend instruction for brevity
+        instruction = "Please answer the following question succinctly, in 2-3 sentences.\n\n"
+        full_user_message = instruction + context_message + user_message
         # --- End Prepare context ---
 
 
