@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1.1: Basics of Personal Finance Practice Problems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base styles adapted from previous pages */
+        body {
+            background-color: white;
+            padding-top: 5rem; /* Increased padding for header */
+            position: relative;
+            padding-bottom: 280px; /* Increased padding for image */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Allow content and button stacking */
+            align-items: center; /* Center content horizontally */
+        }
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; background-color: white;
+            padding: 0.75rem 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex; align-items: center; z-index: 10;
+        }
+        .home-button { /* Also used for Back button */
+            padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer;
+            transition: background-color 0.2s; background-color: #6b7280; color: white;
+            border: none; text-decoration: none;
+        }
+        .home-button:hover { background-color: #4b5563; }
+        .page-title {
+             font-size: 1.25rem; font-weight: 600; color: #1f2937;
+             text-align: center; flex-grow: 1; /* Center title */
+        }
+        /* Profile Dropdown Styles */
+        .profile-container { position: relative; margin-left: auto; z-index: 20; }
+        .profile-icon { width: 32px; height: 32px; background-color: #9ca3af; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 0.9rem; border: 1px solid white; }
+        .profile-dropdown { display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background-color: white; border-radius: 0.375rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); padding: 0.5rem; min-width: 150px; z-index: 30; }
+        .profile-dropdown p { padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #374151; border-bottom: 1px solid #e5e7eb; margin-bottom: 0.5rem; word-break: break-all; }
+        .logout-button { display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #ef4444; background: none; border: none; text-align: left; cursor: pointer; border-radius: 0.25rem; }
+        .logout-button:hover { background-color: #f3f4f6; }
+        .shop-button { display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #1d4ed8; background-color: #eff6ff; border: none; text-align: left; cursor: pointer; border-radius: 0.25rem; margin-bottom: 0.25rem; }
+        .shop-button:hover { background-color: #dbeafe; }
+        .reset-button { display: block; width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #991b1b; background-color: #fee2e2; border: none; text-align: left; cursor: pointer; border-radius: 0.25rem; margin-top: 0.25rem; }
+        .reset-button:hover { background-color: #fecaca; }
+
+        /* Clickable Nutty Image */
+        .clickable-nutty { position: fixed; bottom: 10px; left: 10px; width: 250px; height: 250px; z-index: 5; display: block; transition: transform 0.2s ease-in-out; }
+        .clickable-nutty:hover { transform: scale(1.05); }
+        .clickable-nutty img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+        /* Lesson Content Box */
+        .lesson-content-box {
+            background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem;
+            padding: 2rem; margin: 1rem auto; width: 90%; max-width: 800px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-grow: 1; overflow-y: auto;
+            min-height: 300px; /* Ensure it takes some space */
+        }
+        .lesson-content-box h2 {
+            font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem;
+            border-bottom: 1px solid #d1d5db; padding-bottom: 0.5rem;
+        }
+        /* Styles for practice problems */
+        .question-text {
+            font-weight: 600; color: #1f2937; margin-bottom: 1rem; font-size: 1.1rem;
+        }
+        .options-container label {
+            display: block; background-color: white; padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;
+            cursor: pointer; transition: background-color 0.2s, border-color 0.2s;
+        }
+        .options-container input[type="radio"] {
+            margin-right: 0.75rem; accent-color: #2563eb;
+        }
+        .options-container label:hover {
+            background-color: #eff6ff; border-color: #93c5fd;
+        }
+        .submit-button {
+            padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer;
+            transition: background-color 0.2s; background-color: #10b981; color: white;
+            border: none; text-decoration: none; display: inline-block; margin-top: 1rem;
+        }
+        .submit-button:hover:not(:disabled) { background-color: #059669; }
+        .submit-button:disabled {
+            background-color: #d1d5db; cursor: not-allowed;
+        }
+        .already-answered-message {
+            color: #6b7280; font-style: italic; margin-top: 1rem;
+        }
+        .next-button { /* Reusing submit-button style for consistency */
+             padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer;
+             transition: background-color 0.2s; background-color: #2563eb; /* Blue */ color: white;
+             border: none; text-decoration: none; display: inline-block; margin-top: 1rem;
+        }
+        .next-button:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('home') }}" class="home-button">Home</a>
+        <button onclick="history.back()" class="home-button ml-2">Back</button>
+        <span class="page-title">Lesson 1.1: Basics of Personal Finance Practice Problems</span>
+        <!-- Profile Icon and Dropdown -->
+        {% if user_email %}
+        <div class="profile-container">
+            <div id="profile-icon" class="profile-icon" title="{{ user_email }}">
+                {{ user_email[0]|upper }}
+            </div>
+            <div id="profile-dropdown" class="profile-dropdown">
+                <p>{{ user_email }}</p>
+                <button class="shop-button" disabled>SHOP: {{ nuts }} Nuts</button>
+                <a href="{{ url_for('reset_progress') }}" class="reset-button" onclick="return confirm('Are you sure you want to reset all progress and Nuts? This cannot be undone.');">RESET</a>
+                <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="lesson-content-box">
+        <h2>Question 1</h2>
+        <form action="{{ url_for('submit_lesson_1_1_q1') }}" method="POST" id="q1-form">
+            <p class="question-text">Which of the following is NOT typically part of a monthly budget?</p>
+            <div class="options-container">
+                <label>
+                    <input type="radio" name="answer" value="a" required {% if q1_answered %}disabled{% endif %}>
+                    a. Income from your job
+                </label>
+                <label>
+                    <input type="radio" name="answer" value="b" {% if q1_answered %}disabled{% endif %}>
+                    b. Cost of groceries
+                </label>
+                <label>
+                    <input type="radio" name="answer" value="c" {% if q1_answered %}disabled{% endif %}>
+                    c. Credit card interest
+                </label>
+                 <label>
+                    <input type="radio" name="answer" value="d" {% if q1_answered %}disabled{% endif %}>
+                    d. Company profit margins
+                </label>
+            </div>
+            {% if q1_answered %}
+                <p class="already-answered-message">You have already answered this question.</p>
+                <a href="{{ url_for('lesson_1_1_practice_q2') }}" class="next-button">Next Question</a> <!-- Allow moving on -->
+            {% else %}
+                <button type="submit" class="submit-button">Submit Answer</button>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Clickable Nutty Image -->
+    <a href="{{ url_for('chat_page') }}" class="clickable-nutty">
+        <img src="{{ url_for('static', filename='nuttyfull.jpg') }}" alt="Chat with Nutty">
+    </a>
+
+    <script>
+        // Profile dropdown toggle
+        const profileIcon = document.getElementById('profile-icon');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        if (profileIcon && profileDropdown) {
+            profileIcon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+            document.addEventListener('click', (event) => {
+                if (profileDropdown.style.display === 'block' && !profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

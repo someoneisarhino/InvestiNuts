@@ -103,6 +103,10 @@ def login():
         session['lesson_2_1_q1_answered'] = False
         session['lesson_2_1_q2_answered'] = False
         session['lesson_2_1_q3_answered'] = False
+        session['lesson_1_1_q1_answered'] = False
+        session['lesson_1_1_q2_answered'] = False
+        session['lesson_1_1_q1_answered'] = False
+        session['lesson_1_1_q2_answered'] = False
         # Add keys for other questions/modules later as needed
         print(f"Login successful for: {email}. Initialized session progress.")
         return jsonify({"success": True})
@@ -146,6 +150,8 @@ def signup():
             session['lesson_2_1_q1_answered'] = False
             session['lesson_2_1_q2_answered'] = False
             session['lesson_2_1_q3_answered'] = False
+            session['lesson_1_1_q1_answered'] = False
+            session['lesson_1_1_q2_answered'] = False
             # Add keys for other questions/modules later as needed
             print(f"Signup successful for: {email}. Initialized session progress.")
             return jsonify({"success": True})
@@ -180,6 +186,8 @@ def reset_progress():
         session['lesson_2_1_q1_answered'] = False
         session['lesson_2_1_q2_answered'] = False
         session['lesson_2_1_q3_answered'] = False
+        session['lesson_1_1_q1_answered'] = False
+        session['lesson_1_1_q2_answered'] = False
         # Reset other progress markers here if added later
         print(f"Reset progress for user: {session['email']}")
     # Redirect back to the page the user was on, or home as a fallback
@@ -280,6 +288,28 @@ def lesson_2_1_practice_q3():
     """Renders the third practice question page for Lesson 2.1."""
     q3_answered = session.get('lesson_2_1_q3_answered', False)
     return render_template('lesson_2_1_practice_q3.html', user_email=session.get('email'), nuts=session.get('nuts', 0), q3_answered=q3_answered)
+
+@app.route('/learn/module1/lesson1/page1')
+def lesson_1_1_page1():
+    """Renders the first page of Lesson 1.1."""
+    return render_template('lesson_1_1_page1.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module1/lesson1/page2')
+def lesson_1_1_page2():
+    """Renders the second page of Lesson 1.1."""
+    return render_template('lesson_1_1_page2.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
+@app.route('/learn/module1/lesson1/practice')
+def lesson_1_1_practice():
+    """Renders the practice page for Lesson 1.1."""
+    # Add logic later to track answered status if needed
+    return render_template('lesson_1_1_practice.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+@app.route('/learn/module1/lesson1/practice/q2')
+def lesson_1_1_practice_q2():
+    """Renders the second practice question page for Lesson 1.1."""
+    q2_answered = session.get('lesson_1_1_q2_answered', False)
+    return render_template('lesson_1_1_practice_q2.html', user_email=session.get('email'), nuts=session.get('nuts', 0), q2_answered=q2_answered)
+
 
 
 # --- End Application Page Routes ---
@@ -411,6 +441,57 @@ def submit_lesson_2_1_q3():
         print(f"User {session['email']} tried to re-answer Q1.")
 
     return redirect(url_for('learn_module2')) # Redirect back to Module 2 overview
+@app.route('/submit_answer/lesson1_1_q1', methods=['POST'])
+def submit_lesson_1_1_q1():
+    """Handles submission for Lesson 1.1, Question 1."""
+    if 'email' not in session:
+        return redirect(url_for('index'))
+
+    if not session.get('lesson_1_1_q1_answered', False):
+        answer = request.form.get('answer')
+        correct_answer = 'd'
+    
+        session['lesson_1_1_q1_answered'] = True
+        session['lesson_1_1_q1_correct'] = (answer == correct_answer)
+
+        if session['lesson_1_1_q1_correct']:
+            session['nuts'] = session.get('nuts', 0) + 10
+            print(f"User {session['email']} answered Q1 correctly. Nuts: {session['nuts']}")
+        else:
+            print(f"User {session['email']} answered Q1 incorrectly.")
+
+        session.modified = True
+    else:
+        print(f"User {session['email']} tried to re-answer Q1.")
+
+    return redirect(url_for('lesson_1_1_practice_q2')) # Redirect to Q2
+
+@app.route('/submit_answer/lesson1_1_q2', methods=['POST'])
+def submit_lesson_1_1_q2():
+    """Handles submission for Lesson 1.1, Question 2."""
+    if 'email' not in session:
+        return redirect(url_for('index'))
+
+    if not session.get('lesson_1_1_q2_answered', False):
+        answer = request.form.get('answer')
+        correct_answer = 'b'
+    
+        session['lesson_1_1_q2_answered'] = True
+        session['lesson_1_1_q2_correct'] = (answer == correct_answer)
+
+        if session['lesson_1_1_q2_correct']:
+            session['nuts'] = session.get('nuts', 0) + 10
+            print(f"User {session['email']} answered Q2 correctly. Nuts: {session['nuts']}")
+        else:
+            print(f"User {session['email']} answered Q2 incorrectly.")
+
+        session.modified = True
+    else:
+        print(f"User {session['email']} tried to re-answer Q2.")
+
+    # Since this is the last question for this lesson, redirect back to Module 1 overview
+    return redirect(url_for('learn_module1'))
+
 
 
 # --- End Answer Submission Routes ---
