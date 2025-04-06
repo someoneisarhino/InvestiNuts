@@ -224,6 +224,11 @@ def learn_module3():
     """Renders the page for Learning Module 3."""
     # require_login decorator handles authentication check implicitly via before_request
     return render_template('learn_module3.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+@app.route('/glossary')
+def glossary():
+    """Renders the glossary page."""
+    return render_template('glossary.html', user_email=session.get('email'), nuts=session.get('nuts', 0))
+
 
 @app.route('/learn/module3/lesson1/page1')
 def lesson_3_1_page1():
